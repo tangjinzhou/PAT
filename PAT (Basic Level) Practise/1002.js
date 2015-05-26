@@ -25,4 +25,5 @@ rl.on('line', function(cmd){
         tempArr.push(arr[+sumStr[i]]);
     }
     console.log(tempArr.join(' '));
+    rl.close();
 })

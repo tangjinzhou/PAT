@@ -44,4 +44,5 @@ rl.on('line', function (cmd) {
     str += (i + 1);
   };
   console.log(str);
+  rl.close();
 });

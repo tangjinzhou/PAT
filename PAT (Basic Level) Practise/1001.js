@@ -24,4 +24,5 @@ rl.on('line', function(cmd) {
         step++;
     }
     console.log(step);
+    rl.close();
 })
