@@ -55,7 +55,6 @@ var check = function(line){
     console.log('YES');
 };
 var max = -1;
-var arr = [];
 rl.on('line', function(line) {
     //这种输入方法判断实在恶心, 如果你有更好地方式，欢迎指正
     if(max == -1) {
