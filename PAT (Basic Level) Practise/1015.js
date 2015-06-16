@@ -16,7 +16,7 @@ CHEN, Li
 
 输入格式：
 
-输入第1行给出3个正整数，分别为：N（<=105），即考生总数；L（>=60），为录取最低分数线，即德分和才分均不低于L的考生才有资格被考虑录取；H（<100），为优先录取线——德分和才分均不低于此线的被定义为“才德全尽”，此类考生按德才总分从高到低排序；才分不到但德分到线的一类考生属于“德胜才”，也按总分排序，但排在第一类考生之后；德才分均低于H，但是德分不低于才分的考生属于“才德兼亡”但尚有“德胜才”者，按总分排序，但排在第二类考生之后；其他达到最低线L的考生也按总分排序，但排在第三类考生之后。
+输入第1行给出3个正整数，分别为：N（<=100000），即考生总数；L（>=60），为录取最低分数线，即德分和才分均不低于L的考生才有资格被考虑录取；H（<100），为优先录取线——德分和才分均不低于此线的被定义为“才德全尽”，此类考生按德才总分从高到低排序；才分不到但德分到线的一类考生属于“德胜才”，也按总分排序，但排在第一类考生之后；德才分均低于H，但是德分不低于才分的考生属于“才德兼亡”但尚有“德胜才”者，按总分排序，但排在第二类考生之后；其他达到最低线L的考生也按总分排序，但排在第三类考生之后。
 
 随后N行，每行给出一位考生的信息，包括：准考证号、德分、才分，其中准考证号为8位整数，德才分为区间[0, 100]内的整数。数字间以空格分隔。
 
@@ -55,6 +55,7 @@ CHEN, Li
 10000008 75 79
 10000001 64 90*/
 
+//时间超时，无奈
 var readline = require('readline'),
     rl = readline.createInterface(process.stdin, process.stdout);
 
@@ -64,12 +65,29 @@ var studInfoArr = [],
     dhArr = [], //德胜才
     cdlArr = [], //才德兼亡
     otherArr = [];//其它及格考生
-var sortInfo = function(){
-
+var sum = 0;
+var sortFunc = function(arr1, arr2){
+    var total1 = arr1[1] + arr1[2],
+        total2 = arr2[1] + arr2[2];
+    if (total1 != total2) {
+        return total2 - total1; //降序
+    } else if(arr1[1] != arr2[1]) {
+        return arr2[1] - arr1[1]; //降序
+    } else {
+        return arr1[0] - arr2[0];//升序
+    };
 };
-var getResultArr = function(studInfoArr){
 
+var getResult = function(hArr, dhArr, cdlArr, otherArr){
+    
+    for (var i = 0; i < arguments.length; i++) {
+        arguments[i].sort(sortFunc);
+        for (var j = 0; j < arguments[i].length; j++) {
+            console.log(arguments[i][j].join(' '));
+        };
+    };
 } 
+
 rl.on('line', function(line){
     if(n == -1) {
         var arr = line.split(' ');
@@ -78,15 +96,29 @@ rl.on('line', function(line){
         h = +arr[2];
     } else {
         var infoArr = line.split(' '),
-            de = infoArr[1] = +infoArr[1],
-            cai = infoArr[2] = +infoArr[2];
+            infoId = +infoArr[0],
+            de = +infoArr[1],
+            cai = +infoArr[2];
         if(de < l || cai < l) {
         } else if(de >= h && cai >= h) {
-            
+            sum++;
+            hArr.push([infoId, de, cai]);
+        } else if(de >= h) {
+            sum++;
+            dhArr.push([infoId, de, cai]);
+        } else if(de >= cai) {
+            sum++;
+            cdlArr.push([infoId, de, cai]);
+        } else {
+            sum++;
+            otherArr.push([infoId, de, cai]);
         }
+        
         n--;
     }
     if(n == 0){
+        console.log(sum);
+        getResult(hArr, dhArr, cdlArr, otherArr);
         rl.close();
     }
 })
